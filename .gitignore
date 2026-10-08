@@ -1,0 +1,7 @@
+__pycache__/
+*.py[cod]
+.venv/
+.env
+shopflow.db
+*.db-shm
+*.db-wal

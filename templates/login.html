@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login | ShopFlow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  </head>
+  <body>
+    <div class="promo-bar">Welcome back! Sign in to continue shopping.</div>
+
+    <header class="site-header">
+      <div class="container topbar">
+        <div class="brand-block">
+          <div class="brand">SHOPFLOW</div>
+        </div>
+
+        <nav class="main-nav">
+          <a href="/">Home</a>
+          <a href="/#shop">Shop</a>
+          <a href="/#deals">Deals</a>
+          <a href="/#reviews">Reviews</a>
+        </nav>
+
+        <div class="header-tools">
+          <a href="/" class="login-link">Back to store</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="login-page">
+      <section class="login-card">
+        <h1 id="authTitle">Sign in</h1>
+        <p class="login-subtitle" id="authSubtitle">
+          Enter your details to access your account and saved items.
+        </p>
+
+        {% if error %}
+          <p class="error-message">{{ error }}</p>
+        {% endif %}
+
+        <form class="login-form" id="loginForm" method="POST" action="{{ '/signup' if mode == 'signup' else '/login' }}">
+          <div class="input-group" id="nameFieldWrap" {% if mode != 'signup' %}style="display: none;"{% endif %}>
+            <label for="name">Full name</label>
+            <input id="name" name="name" type="text" placeholder="Your full name" />
+          </div>
+
+          <div class="input-group">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" placeholder="you@example.com" required />
+          </div>
+
+          <div class="input-group">
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" placeholder="Enter your password" required />
+          </div>
+
+          <div class="form-row">
+            <label class="checkbox-wrap">
+              <input type="checkbox" />
+              <span>Remember me</span>
+            </label>
+            <a href="#" class="forgot-link">Forgot password?</a>
+          </div>
+
+          <button class="login-btn" id="submitBtn" type="submit">{{ 'Create account' if mode == 'signup' else 'Sign in' }}</button>
+        </form>
+
+        <p class="signup-text">
+          <span id="toggleText">{{ 'Already have an account?' if mode == 'signup' else 'Don’t have an account?' }}</span>
+          <a href="{{ '/login' if mode == 'signup' else '/signup' }}" id="toggleMode">{{ 'Sign in' if mode == 'signup' else 'Create one' }}</a>
+        </p>
+      </section>
+    </main>
+
+    <script>
+      const form = document.getElementById('loginForm');
+      const nameFieldWrap = document.getElementById('nameFieldWrap');
+      const authTitle = document.getElementById('authTitle');
+      const authSubtitle = document.getElementById('authSubtitle');
+      const toggleText = document.getElementById('toggleText');
+      const toggleMode = document.getElementById('toggleMode');
+      const submitBtn = document.getElementById('submitBtn');
+
+      const isSignupMode = {{ 'true' if mode == 'signup' else 'false' }};
+
+      function syncMode() {
+        nameFieldWrap.style.display = isSignupMode ? 'flex' : 'none';
+        authTitle.textContent = isSignupMode ? 'Create account' : 'Sign in';
+        authSubtitle.textContent = isSignupMode
+          ? 'Create your account to save items and checkout faster.'
+          : 'Enter your details to access your account and saved items.';
+        submitBtn.textContent = isSignupMode ? 'Create account' : 'Sign in';
+        toggleText.textContent = isSignupMode ? 'Already have an account?' : 'Don’t have an account?';
+        toggleMode.textContent = isSignupMode ? 'Sign in' : 'Create one';
+        toggleMode.href = isSignupMode ? '/login' : '/signup';
+        form.action = isSignupMode ? '/signup' : '/login';
+      }
+
+      syncMode();
+    </script>
+  </body>
+</html>
