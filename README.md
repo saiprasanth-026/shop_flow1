@@ -38,9 +38,3 @@ The persistent disk requires Render's paid Starter service. Keep it enabled so a
 - `templates/`: storefront and login pages
 - `static/`: CSS and browser JavaScript
 - `requirements.txt`: Python dependencies
-
-## Deploy the static storefront with GitHub Pages
-
-The root `index.html` is a static version of the storefront. In the GitHub repository, open **Settings > Pages**, choose **Deploy from a branch**, select `main` and `/ (root)`, then save. The site will be available at `https://saiprasanth-026.github.io/shop_flow1/` after Pages finishes publishing.
-
-The static version supports product search, filters, sorting, and a browser-local cart, wishlist, and theme preference. Account login, checkout, and newsletter signup require a backend and are not active on the static site. The Flask app and SQLite-backed accounts continue to work when run on a Python host.

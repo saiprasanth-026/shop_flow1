@@ -81,26 +81,12 @@ const products = [
   },
 ];
 
-function readSavedValue(key, fallback) {
-  try {
-    const value = JSON.parse(localStorage.getItem(key));
-    return value ?? fallback;
-  } catch {
-    return fallback;
-  }
-}
-
-const savedCart = readSavedValue('shopflow-cart', []);
-const savedWishlist = readSavedValue('shopflow-wishlist', []);
-
 const state = {
   selectedCategory: 'All',
   search: '',
   sort: 'featured',
-  cart: Array.isArray(savedCart)
-    ? savedCart.map((id) => products.find((product) => product.id === Number(id))).filter(Boolean)
-    : [],
-  wishlist: new Set(Array.isArray(savedWishlist) ? savedWishlist.map(Number) : []),
+  cart: [],
+  wishlist: new Set(),
 };
 
 const productGrid = document.getElementById('productGrid');
@@ -113,14 +99,6 @@ const cartPanel = document.getElementById('cartPanel');
 const categoryButtons = [...document.querySelectorAll('.category-btn')];
 const searchInput = document.getElementById('searchInput');
 const sortSelect = document.getElementById('sortSelect');
-
-function saveCart() {
-  localStorage.setItem('shopflow-cart', JSON.stringify(state.cart.map((item) => item.id)));
-}
-
-function saveWishlist() {
-  localStorage.setItem('shopflow-wishlist', JSON.stringify([...state.wishlist]));
-}
 
 function formatPrice(value) {
   return `$${value}`;
@@ -239,14 +217,12 @@ function addToCart(id) {
   if (!selectedItem) return;
 
   state.cart.push(selectedItem);
-  saveCart();
   renderCart();
   showToast(`${selectedItem.name} added to cart`);
 }
 
 function removeFromCart(id) {
   state.cart = state.cart.filter((item) => item.id !== id);
-  saveCart();
   renderCart();
   showToast('Item removed from cart');
 }
@@ -286,7 +262,6 @@ productGrid.addEventListener('click', (event) => {
       state.wishlist.add(id);
       showToast('Added to wishlist');
     }
-    saveWishlist();
     renderProducts();
   }
 });
@@ -309,24 +284,13 @@ document.getElementById('closeCart').addEventListener('click', () => {
 document.getElementById('themeToggle').addEventListener('click', () => {
   document.body.classList.toggle('dark-mode');
   const button = document.getElementById('themeToggle');
-  const isDarkMode = document.body.classList.contains('dark-mode');
-  button.textContent = isDarkMode ? '☀️' : '🌙';
-  localStorage.setItem('shopflow-theme', isDarkMode ? 'dark' : 'light');
-});
-
-if (readSavedValue('shopflow-theme', 'light') === 'dark') {
-  document.body.classList.add('dark-mode');
-  document.getElementById('themeToggle').textContent = '☀️';
-}
-
-document.querySelector('.checkout-btn').addEventListener('click', () => {
-  showToast('Checkout is not connected in this static demo.');
+  button.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
 });
 
 document.getElementById('newsletterForm').addEventListener('submit', (event) => {
   event.preventDefault();
   const emailInput = document.getElementById('emailInput');
-  showToast('Newsletter sign-up is not connected in this static demo.');
+  showToast(`Thanks! ${emailInput.value} joined our list.`);
   emailInput.value = '';
 });
 
